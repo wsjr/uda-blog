@@ -1,0 +1,61 @@
+{% extends "base_page.html" %}
+
+{% block more_scripts %}
+  <style type="text/css">
+    body {
+        font-family: sans-serif;
+        width: 800px;
+        margin: 0 auto;
+        padding: 10px;
+    }
+    .error {
+        color: red;
+    }
+    label {
+        display: block;
+        font-size: 20px;
+    }
+    input[type=text] {
+        width: 400px;
+        font-size: 20px;
+        padding: 2px;
+    }
+    textarea {
+        width: 400px;
+        height: 200px;
+        font-size: 17px;
+        font-family: monospace;
+    }
+    input[type=submit] {
+        font-size: 24px;
+    }
+  </style>
+{% endblock %}
+
+{% block header_title %}
+  New Blog
+{% endblock %}
+
+{% block page_title %}
+  New Blog
+{% endblock %}
+
+{% block content %}
+  <div>
+    <form method="post">
+        <label>
+            <div>subject</div>
+            <input type="text" class="custom-input-type" name="subject" value="{{subject}}">
+        </label>
+        <br>
+        <label>
+            <div>blog</div>
+            <textarea name="content">{{content}}</textarea>
+        </label>
+
+        <div class="error">{{error}}</div>
+        <input type="submit">
+        <input class="button" type="button" onclick="window.location.href='/blog'" value="Cancel" />
+    </form>
+  </div>
+{% endblock %}

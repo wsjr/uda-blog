@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  {% block more_scripts %}{% endblock %}
+
+  <title>{% block header_title %}{% endblock %}</title>
+</head>
+
+<body>
+
+  <div class="flex-container">
+    {% block back_button %}
+    <div class="button-container" onclick="window.location.href='/blog'">
+      <div class="button-icon fontawesome-home option-icon-20"></div>
+      <div class="button-text">Home</div>
+    </div>
+    {% endblock %}
+    <div class="flex-title main-title">{% block page_title %}{% endblock %}</div>
+    <div class="flex-spacer"></div>
+  </div>
+
+  {%block login_area %}
+  <div class="login-area">
+    <span class="login-user">Logged in as {{ username }}</span>&nbsp;&nbsp;
+    <a class="login-link" href="/logout">logout</a>
+  </div>
+  {% endblock %}
+
+  <div class="divider"></div>
+
+
+  {% block content %}{% endblock %}
+
+</body>
+</html>

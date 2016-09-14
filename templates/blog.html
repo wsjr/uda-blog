@@ -1,0 +1,49 @@
+{% extends "base_page.html" %}
+
+{% block header_title %}
+  View Blog
+{% endblock %}
+
+{% block page_title %}
+  View Blog
+{% endblock %}
+
+{% block login_area %}
+  <div class="login-area">
+    {% if user_id %}
+      <span class="login-user"> Welcome, {{ username }}</span>&nbsp;&nbsp;
+      <a class="login-link" href="/logout">logout</a>
+    {% else %}
+      <a class="login-link" href="/login">login</a>
+      <span class="login-link">&nbsp;|&nbsp;</span>
+      <a class="login-link" href="/signup">signup</a>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% macro render_single_blog(blog) -%}
+  <div class="post">
+      <div class="post-heading">
+        <div class="post-title">
+          {{blog.subject}} <span class="post-author">by {{username}}</span>
+        </div>
+        <div class="post-date">
+          {{blog.created.strftime('%B %d, %Y')}}
+        </div>
+      </div>
+
+      <div class="post-content">
+        {{blog.content | replace("\n", "<br>") | safe}}
+      </div>
+
+  </div>
+  <br><br>
+{%- endmacro %}
+
+{% block content %}
+  <div class="spacer"></div>
+
+  <div id="content">
+    {{ render_single_blog(blog) }}
+  </div>
+{% endblock %}

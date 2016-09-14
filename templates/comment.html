@@ -1,0 +1,23 @@
+{% extends "base_page.html" %}
+
+{% block header_title %}
+  Edit Comment
+{% endblock %}
+
+{% block page_title %}
+  Edit Comment
+{% endblock %}
+
+{% block content %}
+  {% if comment %}
+    <form method="post">
+        <label>Comments:</label>
+        <div>
+          <input type="text" class="custom-input-type" name="content" value="{{comment.content}}"></input>
+        </div>
+        <input type="submit">
+        <input class="button" type="button" onclick="window.location.href='/viewblogcomments/{{comment.blog_id}}'" value="Cancel" />
+        <div class="error">{{error}}</div>
+    </form>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base_page.html" %}
+
+{% block header_title %}
+  Comments
+{% endblock %}
+
+{% block page_title %}
+  Comments
+{% endblock %}
+
+{% block content %}
+  <div id="content">
+    {% for comment in comments %}
+      <div class="comment">
+          <div class="comment-heading">
+            <div class="comment-title">
+              {{ users_map[comment.user_id] }}
+            </div>
+            <div class="comment-date">
+              {{comment.created.strftime('%B %d, %Y')}}
+            </div>
+          </div>
+
+          <div class="comment-content">
+            {{comment.content | replace("\n", "<br>") | safe}}
+          </div>
+
+          {% if user_id %}
+            <hr>
+
+            <div class="options">
+              <div class="option-right">
+              {% if comment.user_id == user_id %}
+                <div class="fontawesome-edit option-icon-20 option-item"
+                      onclick="window.location.href='/editblogcomment/{{comment.key().id()}}'"
+                      title="Edit Comment"></div>
+                <div class="fontawesome-trash option-icon-20 option-item"
+                      onclick="window.location.href='/deleteblogcomment/{{comment.key().id()}}'"
+                      title="Delete Comment"></div>
+              {% endif %}
+              </div>
+            </div>  
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <br><br><br>
+
+  <form method="post">
+      <label>Comments:</label>
+      <div>
+        <input type="text" class="custom-input-type" name="content">{{content}}</input>
+      </div>
+      <input type="submit">
+      <input class="button" type="button" onclick="window.location.href='/blog'" value="Cancel" />
+      <div class="error">{{error}}</div>
+  </form>
+{% endblock %}

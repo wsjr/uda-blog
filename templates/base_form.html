@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <style type="text/css">
+      .label {text-align: right}
+      .error {color: red}
+    </style>
+
+  </head>
+
+  <body>
+    <h2>{% block body_title %}{% endblock %}</h2>
+
+
+    <div class="login-area">
+      {% block login_area %}{% endblock%}
+    </div>
+
+    <form method="post" action="{% block form_action %}{% endblock %}">
+      <table>
+        {% block content %}
+        {% endblock %}
+      </table>
+      <input type="submit">
+    </form>
+    <br>
+    {% block other_links %}{% endblock %}
+  </body>
+
+</html>

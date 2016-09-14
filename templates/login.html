@@ -1,0 +1,54 @@
+{% extends "base_form.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block body_title %}
+Login
+{% endblock %}
+
+{% block login_area %}
+<a class="login-link" href="/signup">signup</a>
+{% endblock %}
+
+{% block form_action %}
+/login
+{% endblock %}
+
+{% block content %}
+  <tr>
+    <td colspan="2">
+      <span class="error">{{loginfirsterror}}</span>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">
+      Username
+    </td>
+    <td>
+      <input type="text" name="username" value="{{username}}">
+    </td>
+  </tr>
+
+  <tr>
+    <td class="label">
+      Password
+    </td>
+    <td>
+      <input type="password" name="password" value="">
+    </td>
+  </tr>
+
+  <tr>
+    <td class="error" colspan="2">
+      {{loginerror}}
+    </td>
+  </tr>
+{% endblock %}
+
+{% block other_links %}
+  <div class="login-area">
+      <a class="login-link" href="/signup">signup</a>
+  </div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends "base_page.html" %}
+
+{% block more_scripts %}
+  <script>
+    function getMessage(nCount) {
+      var sMsg = "No Likes yet ...";
+      if (nCount === 1) {
+        sMsg = "1 Like";
+      } else if (nCount > 1) {
+        sMsg = nCount + " Likes";
+      }
+      return sMsg;
+    }
+
+    function toggleHeart(elHtml) {
+      var bLike = false;
+      if ($(elHtml).hasClass('fontawesome-heart-empty')) {
+        $(elHtml).removeClass('fontawesome-heart-empty').addClass('fontawesome-heart')
+        bLike = true;
+      } else {
+        $(elHtml).removeClass('fontawesome-heart').addClass('fontawesome-heart-empty')
+      }
+      var sIconId = $(elHtml).attr("id");
+      var sLinkId = "#" + sIconId.replace("-heart", "-likes-msg");
+      var sCount = $(sLinkId).attr("data-likes");
+      var sBlogId = $(sLinkId).attr("data-blog-id");
+
+      // Like
+      if (bLike) {
+        if (sCount === "None") {
+          nValue = 1;
+          sMessage = getMessage(nValue);
+        } else {
+          nValue = parseInt(sCount) + 1;
+          sMessage = getMessage(nValue);
+        }
+      // Un-Like
+      } else {
+        if (sCount === 1) {
+          nValue = "None";
+          sMessage = getMesage(0);
+        } else {
+          nValue = parseInt(sCount) - 1;
+          sMessage = getMessage(nValue);
+        }
+      }
+
+      // Update the msg
+      $(sLinkId).attr("data-likes", nValue);
+
+      // Update the data-link
+      $(sLinkId).text(sMessage);
+
+      // Post
+      if (bLike) {
+        $.post("/likeblog", {blog_id: parseInt(sBlogId)});
+      } else {
+        $.post("/unlikeblog", {blog_id: parseInt(sBlogId)});
+      }
+    }
+  </script>
+{% endblock %}
+
+{% block header_title %}
+  All Blogs
+{% endblock %}
+
+{% block page_title %}
+  All Blogs
+{% endblock %}
+
+{% block login_area %}
+  <div class="login-area">
+    {% if user_id %}
+      <span class="login-user"> Logged in as {{ username }}</span>&nbsp;&nbsp;
+      <a class="login-link" href="/logout">logout</a>
+    {% else %}
+      <a class="login-link" href="/login">login</a>
+      <span class="login-link">&nbsp;|&nbsp;</span>
+      <a class="login-link" href="/signup">signup</a>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block back_button %}
+{% endblock %}
+
+{% macro render_single_blog(blog) -%}
+  <div class="post">
+      <div class="post-heading">
+        <div class="post-title">
+          {{blog.subject}} <span class="post-author">by {{ users_map[blog.user_id] }}</span>
+        </div>
+        <div class="post-date">
+          {{blog.created.strftime('%B %d, %Y')}}
+        </div>
+      </div>
+
+      <div class="post-content">
+        {{blog.content | replace("\n", "<br>") | safe}}
+      </div>
+
+      {% if user_id %}
+        <hr>
+
+        <div class="options">
+          <div class="option-left">
+            {% if blog.user_id != user_id %}
+
+              {% set key = user_id|string + '-' + blog.key().id()|string %}
+              {% if likes_map.get(key) and likes_map[key] == true %}
+                <div id="{{blog.key().id()}}-heart"
+                      class="fontawesome-heart option-icon-20 option-item"
+                      onclick="toggleHeart(this)"
+                      title="Like or Unlike"></div>
+              {% else %}
+                <div id="{{blog.key().id()}}-heart"
+                      class="fontawesome-heart-empty option-icon-20 option-item"
+                      onclick="toggleHeart(this)"
+                      title="Like or Unlike"></div>
+              {% endif %}
+            {% endif %}
+
+            <div class="fontawesome-comment-alt option-icon-20 option-item"
+                  onclick="window.location.href='/viewblogcomments/{{blog.key().id()}}'"
+                  title="View or Add Comments"></div>
+          </div>
+
+
+          <div class="option-right">
+            {% if blog.user_id == user_id %}
+              <div class="fontawesome-edit option-icon-20 option-item"
+                    onclick="window.location.href='/editblog/{{blog.key().id()}}'"
+                    title="Edit Blog"></div>
+              <div class="fontawesome-trash option-icon-20 option-item"
+                    onclick="window.location.href='/deleteblog/{{blog.key().id()}}'"
+                    title="Delete Blog"></div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div>
+          <a id="{{blog.key().id()}}-likes-msg"
+              class="comments-link"
+              href="/viewlikeblog/{{blog.key().id()}}"
+              data-blog-id="{{blog.key().id()}}"
+              data-likes="{{likes_map.get(blog.key().id())}}"
+              title="View Likes">
+            {% if likes_map.get(blog.key().id()) %}
+              {% set likes = likes_map[blog.key().id()] %}
+              {% if likes == 1 %}
+                1 like
+              {% elif likes > 1 %}
+                {{likes_map[blog.key().id()]}} likes
+              {% endif %}
+            {% else %}
+              No likes yet ...
+            {% endif %}
+          </a>
+        </div>
+      {% endif %}
+  </div>
+  <br><br>
+{%- endmacro %}
+
+{% block content %}
+  {% if user_id %}
+    <div class="button-container" onclick="window.location.href='/blog/newpost'">
+      <div class="button-icon fontawesome-rss option-icon-20"></div>
+      <div class="button-text">Add Blog</div>
+    </div>
+  {% endif %}
+  <div class="spacer"></div>
+
+  <div id="content">
+    {% for blog in blogs %}
+      {{ render_single_blog(blog) }}
+    {% endfor %}
+  </div>
+{% endblock %}

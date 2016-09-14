@@ -1,0 +1,27 @@
+{% extends "base_page.html" %}
+
+{% block header_title %}
+  Likers
+{% endblock %}
+
+{% block page_title %}
+  Likers
+{% endblock %}
+
+{% block content %}
+  <div id="content">
+    {% for like in likes %}
+      <div class="comment">
+          <div class="comment-heading">
+            <div class="comment-title">
+              {{ users_map[like.user_id] }}
+            </div>
+          </div>
+
+          <div class="comment-content">
+            <div class="fontawesome-heart option-icon-20">
+          </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
